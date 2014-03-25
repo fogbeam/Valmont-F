@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "http://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
+<eSearchResult>
+	<Count>36209</Count>
+	<RetMax>20</RetMax>
+	<RetStart>0</RetStart>
+	<IdList>
+		<Id>24600463</Id>
+		<Id>24599576</Id>
+		<Id>24599255</Id>
+		<Id>24597917</Id>
+		<Id>24596336</Id>
+		<Id>24596096</Id>
+		<Id>24595737</Id>
+		<Id>24594355</Id>
+		<Id>24593909</Id>
+		<Id>24593336</Id>
+		<Id>24593275</Id>
+		<Id>24592392</Id>
+		<Id>24591227</Id>
+		<Id>24589758</Id>
+		<Id>24589679</Id>
+		<Id>24588424</Id>
+		<Id>24586632</Id>
+		<Id>24586301</Id>
+		<Id>24584955</Id>
+		<Id>24583078</Id>
+	</IdList>
+	<TranslationSet>
+		<Translation>
+			<From>manganese</From>
+			<To>"manganese"[MeSH Terms] OR "manganese"[All Fields]</To>
+		</Translation>
+	</TranslationSet>
+	<TranslationStack>
+		<TermSet>
+			<Term>"manganese"[MeSH Terms]</Term>
+			<Field>MeSH Terms</Field>
+			<Count>20374</Count>
+			<Explode>Y</Explode>
+		</TermSet>
+		<TermSet>
+			<Term>"manganese"[All Fields]</Term>
+			<Field>All Fields</Field>
+			<Count>36217</Count>
+			<Explode>N</Explode>
+		</TermSet>
+		<OP>OR</OP>
+		<OP>GROUP</OP>
+	</TranslationStack>
+	<QueryTranslation>"manganese"[MeSH Terms] OR "manganese"[All Fields]</QueryTranslation>
+</eSearchResult>
