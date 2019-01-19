@@ -26,7 +26,9 @@ class SearchService
 
 		
 		XmlSlurper xmlSlurper = new XmlSlurper();
-		
+		xmlSlurper.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
+		xmlSlurper.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+				
 		CloseableHttpResponse responseATerm = null;
 		CloseableHttpResponse responseASummary = null;
 		CloseableHttpResponse responseCTerm = null;
@@ -39,7 +41,8 @@ class SearchService
 			// generate a list of items that contain the "A" term
 			HttpGet httpgetATerm = new HttpGet(requestBaseUrl + "esearch.fcgi?db=pubmed&term=${aTerm}" );
 			responseATerm = httpclient.execute(httpgetATerm);		
-						
+			
+			println "status: ${responseATerm.statusLine}";
 			
 			HttpEntity entityATerm = responseATerm.getEntity();
 			if (entityATerm != null) 
@@ -48,7 +51,7 @@ class SearchService
 				try 
 				{					
 					
-					// String responseText = instream.getText();
+					// String responseText = instreamATerm.getText();
 					// println "responseText: " + responseText;
 					def xmlResult = xmlSlurper.parse( instreamATerm );
 					
@@ -109,7 +112,7 @@ class SearchService
 				try
 				{
 					
-					// String responseText = instream.getText();
+					// String responseText = instreamCTerm.getText();
 					// println "responseText: " + responseText;
 					def xmlResult = xmlSlurper.parse( instreamCTerm );
 					
