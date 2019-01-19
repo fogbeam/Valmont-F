@@ -27,7 +27,7 @@ Discovery: The Role of Medical Subject Headings](http://arrowsmith.psych.uic.edu
 * [Swanson linking revisited: Accelerating literature-based discovery across domains using a conceptual influence graph](https://pdfs.semanticscholar.org/1f6c/303718a69f0a74b8dd85ba5dfaf4df08e18d.pdf)
 * [Improving Knowledge Discovery in Document Collections through Combining Text Retrieval and Link Analysis Techniques ](https://www.researchgate.net/profile/Wei_Jin28/publication/4324221_Improving_Knowledge_Discovery_in_Document_Collections_through_Combining_Text_Retrieval_and_Link_Analysis_Techniques/links/54d422250cf2970e4e62c744.pdf)
 * [Constructing an Associative Concept Space for Literature-based Discovery](https://pdfs.semanticscholar.org/72ee/cdb92a5db396fc2927819b46d5a30bf91cf7.pdf)
-
+* [Recent Advances in Literature Based Discovery](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.77.6842&rep=rep1&type=pdf)
 
 ## License
 
