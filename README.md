@@ -12,6 +12,18 @@ This is very much a Work In Progress at the moment, and the original A-B-C disco
 ## Reference Material
 
 * [Arrowsmith Project at UIC](http://arrowsmith.psych.uic.edu/arrowsmith_uic/index.html) 
+* [Rediscovering Don Swanson:The Past, Present and Future of Literature-based Discovery](https://content.sciendo.com/view/journals/jdis/2/4/article-p43.xml)
+* [Undiscovered Public Knowledge](http://arrowsmith.psych.uic.edu/arrowsmith_uic/tutorial/swanson_libquart_1986.pdf)
+* [An interactive system for finding complementary
+literatures: a stimulus to scientific discovery ](https://ac.els-cdn.com/S0004370297000088/1-s2.0-S0004370297000088-main.pdf?_tid=197fe0f1-d912-478b-8534-37fcd447e2dc&acdnat=1547877235_4976ac1be0fd0c7164e0f18bb3aaa8d7)
+* [Literature Based Discovery: Beyond the ABCs](http://arrowsmith.psych.uic.edu/arrowsmith_uic/tutorial/smalheiser_2012.pdf)
+* [Ranking Indirect Connections in Literature-Based
+Discovery: The Role of Medical Subject Headings](http://arrowsmith.psych.uic.edu/arrowsmith_uic/tutorial/swanson_jasist_2006.pdf)
+* [Literature Based Discovery: Models, Methods, and Trends](https://ac.els-cdn.com/S1532046417301909/1-s2.0-S1532046417301909-main.pdf?_tid=edb0bfb1-90e6-4027-a817-8817c67298d1&acdnat=1547877280_bb234971c849f259006502cbcb033420)
+* [HTS and hit finding in academia – from chemical genomics to drug discovery](https://ac.els-cdn.com/S1359644609003213/1-s2.0-S1359644609003213-main.pdf?_tid=a80b7bd4-7b78-4b53-9819-7005ce1fcbb3&acdnat=1547877295_518ab0fdecdff59ef493985ffeeb58ff)
+* [Conceptual biology, hypothesis discovery, and text mining: Swanson's legacy](https://bio-diglib.biomedcentral.com/track/pdf/10.1186/1742-5581-3-2)
+* [Literature‐based Resurrection of Neglected Medical Discoveries](https://journals.uic.edu/ojs/index.php/jbdc/article/view/3515/2953)
+
 
 ## License
 
