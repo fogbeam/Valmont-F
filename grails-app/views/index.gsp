@@ -8,8 +8,7 @@
 		<div id="page-body" role="main">
 			<h1>Welcome to Valmont/F!</h1>
 			<p>
-			  This is an open source <a href="http://en.wikipedia.org/wiki/Literature-based\
-_discovery">Literature Based Discovery</a> system by Fogbeam Labs, which includes a re-implementation of the classic <a href="http://en.wikipedia.org/wiki/Arrowsmith_System">ArrowSmith</a> system. This application is designed to be a flexible and extensible platform for experimenting with new algorithms and approaches to Literature Based Discovery (and, perhaps, Knowledge Discovery in general).
+			  This is an open source <a href="http://en.wikipedia.org/wiki/Literature-based_discovery">Literature Based Discovery</a> system by Fogbeam Labs, which includes a re-implementation of the classic <a href="http://en.wikipedia.org/wiki/Arrowsmith_System">ArrowSmith</a> system. This application is designed to be a flexible and extensible platform for experimenting with new algorithms and approaches to Literature Based Discovery (and, perhaps, Knowledge Discovery in general).
 			</p>
 			<p>
 			Here we will experiment with, and learn about, Literature Based Discovery
