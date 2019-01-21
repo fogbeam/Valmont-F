@@ -1,5 +1,5 @@
 ## Overview
-ArrowSmith - (The beginnings of) a re-implementation of the classic [ArrowSmith](http://arrowsmith.psych.uic.edu/arrowsmith_uic/) [Literature Based Discovery](https://en.wikipedia.org/wiki/Literature-based_discovery) system, using Groovy and Grails.
+Valmont/F - (The beginnings of) a re-implementation of the classic [ArrowSmith](http://arrowsmith.psych.uic.edu/arrowsmith_uic/) [Literature Based Discovery](https://en.wikipedia.org/wiki/Literature-based_discovery) system, using Groovy and Grails.
 
 This is a learning platform of anyone interested in LBD to play and experiment.  Our
 first goal is to re-implement the classic algorithm(s) that [Don Swanson](https://en.wikipedia.org/wiki/Don_R._Swanson) developed, and then start looking for new and interesting variations and additions.  
