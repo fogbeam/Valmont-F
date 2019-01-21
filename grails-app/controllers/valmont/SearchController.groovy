@@ -20,7 +20,7 @@ class SearchController
 		[:];	
 	}
 	
-    def search1()
+    def doArrowSmithProcedureOne()
 	{
 		String aTerm = params.termA;
 		String cTerm = params.termC;
@@ -30,4 +30,16 @@ class SearchController
 		// return results for rendering in view...
 		[results:results];
 	}
+	
+	def doArrowSmithProcedureTwo()
+	{
+		String aTerm = params.termA;
+		String cTerm = params.termC;
+		
+		List<SearchResult1> results = searchService.searchVersionTwo( aTerm, cTerm );
+		
+		// return results for rendering in view...
+		[results:results];
+	}
+	
 }

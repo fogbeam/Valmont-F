@@ -9,7 +9,7 @@
 			
 			<h1>Procedure One</h1>
 			<div id="entry-form-div" style="margin-top:30px;">
-				<g:form controller="search" action="search1" >
+				<g:form controller="search" action="doArrowSmithProcedureOne" >
 					<label for="termA">"A" term</label><g:textField name="termA"/>
 					<label for="termC">"C" term</label><g:textField name="termC"/>
 					<g:submitButton name="submit"/>
