@@ -2,12 +2,12 @@
 <html>
 	<head>
 		<meta name="layout" content="main"/>
-		<title>ArrowSmith - Search Results</title>
+		<title>Valmont/F - Search Results</title>
 	</head>
 	<body>
 		<div id="page-body" role="main">
 			
-			<h1>Welcome to ArrowSmith!</h1>
+			<h1>Welcome to Valmont/F!</h1>
 			
 			<p>
 				<g:each in="${results}" var="result">

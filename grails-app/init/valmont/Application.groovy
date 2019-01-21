@@ -1,4 +1,4 @@
-package arrowsmith
+package valmont
 
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsAutoConfiguration

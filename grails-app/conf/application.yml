@@ -2,7 +2,7 @@
 grails:
     profile: web
     codegen:
-        defaultPackage: arrowsmith
+        defaultPackage: valmont
     gorm:
         reactor:
             # Whether to translate GORM events into Reactor events

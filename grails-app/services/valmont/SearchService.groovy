@@ -1,6 +1,8 @@
-package arrowsmith
+package valmont
 
 import groovy.util.slurpersupport.GPathResult
+import valmont.ResultDocument1
+import valmont.SearchResult1
 
 import org.apache.http.HttpEntity
 import org.apache.http.client.methods.CloseableHttpResponse

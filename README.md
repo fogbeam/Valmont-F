@@ -9,6 +9,11 @@ order to facilitate experimenting with novel approaches to Literature Based Disc
 
 This is very much a Work In Progress at the moment, and the original A-B-C discovery algorithm is only partly implemented. Look for more on this coming soon.
 
+## About
+
+When I say I am called Valmont/F, the name will convey no impression to the reader, one way or another. My occupation is that of open source Literature Based Discovery system on GitHub. If you ask anyone who Valmont was, she will likely be able to tell you to see [http://www.gutenberg.org/files/19369/19369-h/19369-h.htm](http://www.gutenberg.org/files/19369/19369-h/19369-h.htm) If you ask here why I am named Valmont/F, she will surely say that I am named after the world-famous detective, Eugène Valmont.
+
+
 ## Reference Material
 
 * [Arrowsmith Project at UIC](http://arrowsmith.psych.uic.edu/arrowsmith_uic/index.html)
@@ -32,4 +37,3 @@ Discovery: The Role of Medical Subject Headings](http://arrowsmith.psych.uic.edu
 ## License
 
 Code is licensed under the Apache License v2.
-

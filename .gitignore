@@ -10,3 +10,6 @@ out/
 .project
 .settings
 .classpath
+bin/
+bin/*
+*.class

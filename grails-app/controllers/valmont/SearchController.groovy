@@ -1,10 +1,24 @@
-package arrowsmith
+package valmont
+
+import valmont.SearchResult1
 
 class SearchController 
 {
 
 	def searchService;
 	
+	
+	
+	def procedureOne()
+	{
+		
+		[:];
+	}
+	
+	def procedureTwo()
+	{
+		[:];	
+	}
 	
     def search1()
 	{
