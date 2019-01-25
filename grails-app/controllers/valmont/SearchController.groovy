@@ -6,9 +6,7 @@ class SearchController
 {
 
 	def searchService;
-	
-	
-	
+		
 	def procedureOne()
 	{
 		
@@ -23,9 +21,8 @@ class SearchController
     def doArrowSmithProcedureOne()
 	{
 		String aTerm = params.termA;
-		String cTerm = params.termC;
 		
-		List<SearchResult1> results = searchService.searchVersionOne( aTerm, cTerm );
+		List<SearchResult1> results = searchService.swansonLinkingProcedureOne( aTerm );
 		
 		// return results for rendering in view...
 		[results:results];
@@ -36,7 +33,11 @@ class SearchController
 		String aTerm = params.termA;
 		String cTerm = params.termC;
 		
-		List<SearchResult1> results = searchService.searchVersionTwo( aTerm, cTerm );
+		List<SearchResult1> results = new ArrayList<SearchResult1>();
+		
+		SearchResult1 result = searchService.swansonLinkingProcedureTwo( aTerm, cTerm );
+		
+		results.add( result );
 		
 		// return results for rendering in view...
 		[results:results];

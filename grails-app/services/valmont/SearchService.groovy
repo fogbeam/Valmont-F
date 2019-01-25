@@ -1,45 +1,54 @@
 package valmont
 
-import groovy.util.slurpersupport.GPathResult
-import valmont.ResultDocument1
-import valmont.SearchResult1
-
 import org.apache.http.HttpEntity
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClients
-import org.apache.http.util.EntityUtils;
 
 class SearchService 
-{
-
-    List<SearchResult1> searchVersionOne( final String aTerm, final String cTerm ) 
+{	
+	List<SearchResult1> swansonLinkingProcedureOne( final String aTerm )
 	{
 		List<SearchResult1> searchResults = new ArrayList();
+		
+		return searchResults;
+	}
+	
+	public SearchResult1 swansonLinkingProcedureTwo( final String aTerm, final String cTerm ) 
+	{	
+		SearchResult1 searchResult = new SearchResult1();
+		
+		List<String> stopWords = new ArrayList<String>();
+		File stopWordsFile = new File( "./stopwords.csv" );
+		FileReader stopWordsReader = new FileReader( stopWordsFile );
+		BufferedReader bufferedSWR = new BufferedReader( stopWordsReader );
+		
+		String stopWordsLine = bufferedSWR.readLine();
+		String[] stopWordsArray = stopWordsLine.split( "," );
+		stopWords.addAll( stopWordsArray );
 		
 		
 		// do a PubMedCentral search...
 		String requestBaseUrl = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
-		// http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=science%5bjournal%5d+AND+breast+cancer+AND+2008%5bpdat%5d
-		
+		// http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=science%5bjournal%5d+AND+breast+cancer+AND+2008%5bpdat%5d	
 		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
-
 		
 		XmlSlurper xmlSlurper = new XmlSlurper();
 		xmlSlurper.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
 		xmlSlurper.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-				
+			
+		
+		List<String> aTermTitles = new ArrayList<String>();
+		List<String> cTermTitles = new ArrayList<String>();
+			
 		CloseableHttpResponse responseATerm = null;
 		CloseableHttpResponse responseASummary = null;
 		CloseableHttpResponse responseCTerm = null;
 		CloseableHttpResponse responseCSummary = null;
 		try
 		{
-			
-			SearchResult1 searchResult = new SearchResult1();
-
 			// generate a list of items that contain the "A" term
 			HttpGet httpgetATerm = new HttpGet(requestBaseUrl + "esearch.fcgi?db=pubmed&term=${aTerm}" );
 			responseATerm = httpclient.execute(httpgetATerm);		
@@ -82,6 +91,9 @@ class SearchService
 							try
 							{
 								def aSummaryXmlResult = xmlSlurper.parse( instreamASummary );
+								def articleTitle = aSummaryXmlResult.depthFirst().findAll { it.name() == 'ArticleTitle' }[0]
+								// println "aSummaryXmlResult: ${ articleTitle.text() }";
+								aTermTitles.add( articleTitle.text() );
 							}
 							finally
 							{
@@ -143,12 +155,14 @@ class SearchService
 							try
 							{
 								def cSummaryXmlResult = xmlSlurper.parse( instreamCSummary );
+								def articleTitle = cSummaryXmlResult.depthFirst().findAll { it.name() == 'ArticleTitle' }[0];
+								// println "cSummaryXmlResult: ${ articleTitle }";
+								cTermTitles.add( articleTitle.text() );
 							}
 							finally
 							{
 								instreamCSummary.close();
 							}
-
 						}
 						
 						searchResult.cTermDocs.add( doc );
@@ -161,25 +175,63 @@ class SearchService
 				}
 			}
 				
-			
-			// TODO: use the UIDs we got above, to download the title and abstract (at least)
-			// of the selected documents.  For the ones that are fully open access, we may download
-			// the full text of the paper as well.
-			
+						
+			Map<String, Boolean> candidateBTerms = new HashMap<String,Boolean>();
 			
 			// generate a list of "B" terms common to both "A" and "C" documents
 			// Note: This would exclude the original terms, and stop-words, no?
+			for( String aTermTitle : aTermTitles )
+			{
+				// tokenize this...
+				
+				// for everything except stop words and the original aTerm, store the term in our
+				// candidate list
+				String[] tokens = aTermTitle.split( "\\s+" );
+				
+				for( String token : tokens )
+				{
+					if( !token.equals( aTerm ) && !stopWords.contains( token.toLowerCase() ) )
+					{
+						candidateBTerms.put( token, false );
+					}
+				}
+				
+			}
+
+			for( String cTermTitle : cTermTitles )
+			{
+				// tokenize this...
+				
+				// for everything except stop words and the original aTerm, store the term in our
+				// candidate list
+				String[] tokens = cTermTitle.split( "\\s+" );
+				
+				for( String token : tokens )
+				{
+					if( !token.equals( cTerm ) && !stopWords.contains( token ) )
+					{
+						if( candidateBTerms.containsKey( token.toLowerCase() ))
+						{
+							candidateBTerms.replace( token, true );
+						}
+						else
+						{
+							candidateBTerms.put( token, false );
+						}
+					}
+				}
+			}
 			
 			
+			for( Map.Entry<String,Boolean> bCandidate : candidateBTerms )
+			{
+				if( bCandidate.value == true )
+				{
+					println( "bWord: " + bCandidate.key );
+				}
+			}
 			
-			// generate the "AB" list of links from A -> B
-			// generate the "BC" list of links from b -> C
-			
-			
-			
-			searchResults.add( searchResult );
-			
-			
+			return searchResult;
 		} 
 		finally 
 		{
@@ -203,7 +255,5 @@ class SearchService
 				responseCSummary.close();
 			}
 		}
-		
-		return searchResults;
     }
 }
