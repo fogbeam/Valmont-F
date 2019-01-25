@@ -19,11 +19,12 @@
 				<h1>Welcome to Valmont/F!</h1>
 				<h2>Arrowsmith Procedure Two results:</h2>
 
-				<p>
+				<div class="row">
+				
 					<g:each in="${results}" var="result">
 
-						<div
-							style="float: left; width: 200px; background-color: #F8F8F8; min-height: 100px; margin-left: 20px;">
+						<div class="col-md-3"
+							style="background-color: #F8F8F8; min-height: 100px;">
 
 							"A" Results:
 
@@ -36,8 +37,8 @@
 
 						</div>
 
-						<div
-							style="float: left; width: 200px; background-color: #F8F8F8; min-height: 100px; margin-left: 20px;">
+						<div class="col-md-3"
+							style="background-color: #F8F8F8; min-height: 100px;">
 
 							"AB" Results:
 
@@ -48,8 +49,8 @@
 							</ul>
 						</div>
 
-						<div
-							style="float: left; width: 200px; background-color: #F8F8F8; min-height: 100px; margin-left: 20px;">
+						<div class="col-md-3"
+							style="background-color: #F8F8F8; min-height: 100px;">
 
 							"BC" Results:
 
@@ -60,8 +61,8 @@
 							</ul>
 						</div>
 
-						<div
-							style="float: left; width: 200px; background-color: #F8F8F8; min-height: 100px; margin-left: 20px;">
+						<div class="col-md-3"
+							style="background-color: #F8F8F8; min-height: 100px;">
 
 							"C" Results:
 
@@ -74,7 +75,9 @@
 						</div>
 
 					</g:each>
-				</p>
+				</div>
+				
+				<!--  <div class="row" > -->
 				<div id="entry-form-div" style="clear: both; margin-top: 50px;">
 					<p>Search again?</p>
 
@@ -87,6 +90,9 @@
 					</g:form>
 
 				</div>
+				
+				<!-- </div> -->
+				
 			</div>
 		</div>
 	</div>
