@@ -1,0 +1,9 @@
+All Groovy and GSP files in this repository are licensed under the Apache License v2.
+Full text of the ALv2 may be found at https://www.apache.org/licenses/LICENSE-2.0
+
+Javascript and other supporting 3rd party libraries are used under their own
+respective license.
+
+File 'clinical-stopwords.txt' is from repository https://github.com/kavgan/clinical-concepts
+and is apparently licensed under the GPL v3.
+
