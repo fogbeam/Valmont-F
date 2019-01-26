@@ -36,4 +36,5 @@ Discovery: The Role of Medical Subject Headings](http://arrowsmith.psych.uic.edu
 
 ## License
 
-Code is licensed under the Apache License v2.
+Original code provided by Fogbeam Labs is licensed under the Apache License v2. Data files and supporting libraries may be under separate licenses. See LICENSE file for more details.
+  
