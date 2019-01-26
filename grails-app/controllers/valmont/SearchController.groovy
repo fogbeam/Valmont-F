@@ -20,7 +20,7 @@ class SearchController
 	{
 		String aTerm = params.termA;
 		
-		List<SearchResult1> results = searchService.swansonLinkingProcedureOne( aTerm );
+		List<SwansonABCLink> results = searchService.swansonLinkingProcedureOne( aTerm );
 		
 		[results:results];
 	}

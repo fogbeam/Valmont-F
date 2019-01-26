@@ -1,4 +1,3 @@
-#regular stop words with clinical
 x
 y
 your
@@ -13,7 +12,6 @@ ye
 yet
 z
 zillion
-#####
 well
 will
 who
@@ -82,7 +80,6 @@ excluded
 group
 ok
 being
-#####
 j
 u
 umpteen
