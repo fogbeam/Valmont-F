@@ -47,4 +47,20 @@ Original code provided by Fogbeam Labs is licensed under the Apache License v2. 
 * improve code structure to create reusable components that simplify implementing new algorithms and approaches
 * add input validation to existing controllers
 * figure out a UI experience for "drilling down" further into the results we currently return, especially for "Procedure One"
-	  
+* support more complex relationships, especially "multi-hop" ones that involve more than two concepts
+* Add visualizations to help navigate / explore results. Maybe use dot / graphviz 
+* Add caching to reduce the need for downloading documents all the time
+
+## Resources and Stuff for Future Experimtation
+
+* https://research.fb.com/fasttext/
+* https://opennlp.apache.org/
+* https://stanfordnlp.github.io/CoreNLP/
+* https://github.com/openwims
+* http://giraph.apache.org/
+* http://www.graphviz.org/
+* https://github.com/nidi3/graphviz-java
+* https://d3js.org/
+* http://visjs.org/
+* http://sigmajs.org/
+	
