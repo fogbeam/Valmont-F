@@ -37,4 +37,14 @@ Discovery: The Role of Medical Subject Headings](http://arrowsmith.psych.uic.edu
 ## License
 
 Original code provided by Fogbeam Labs is licensed under the Apache License v2. Data files and supporting libraries may be under separate licenses. See LICENSE file for more details.
-  
+
+## TODO
+
+* add more terms to the clinical-stopwords list
+* add a "domain selector" to toggle what archive is queried and what stopword list(s) are employed
+* better tokenization of abstracts and titles, so we don't, for example, treat 'Start' and 'Start.' as different tokens and generate each as a 'b term'
+* use NLP, deep learning, etc. to do deeper semantic analysis of article text to find more meaningful connections that simple co-occurence of words
+* improve code structure to create reusable components that simplify implementing new algorithms and approaches
+* add input validation to existing controllers
+* figure out a UI experience for "drilling down" further into the results we currently return, especially for "Procedure One"
+	  
