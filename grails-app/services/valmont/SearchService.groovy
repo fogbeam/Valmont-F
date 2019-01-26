@@ -5,6 +5,7 @@ import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClients
+import org.apache.http.util.EntityUtils
 
 class SearchService 
 {	
@@ -15,10 +16,8 @@ class SearchService
 		return searchResults;
 	}
 	
-	public SearchResult1 swansonLinkingProcedureTwo( final String aTerm, final String cTerm ) 
+	public List<SwansonABCLink> swansonLinkingProcedureTwo( final String aTerm, final String cTerm ) 
 	{	
-		SearchResult1 searchResult = new SearchResult1();
-		
 		List<String> stopWords = new ArrayList<String>();
 		File stopWordsFile = new File( "./stopwords.csv" );
 		FileReader stopWordsReader = new FileReader( stopWordsFile );
@@ -40,8 +39,8 @@ class SearchService
 		xmlSlurper.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 			
 		
-		List<String> aTermTitles = new ArrayList<String>();
-		List<String> cTermTitles = new ArrayList<String>();
+		List<ResultDocument1> aTermDocuments = new ArrayList<ResultDocument1>();
+		List<ResultDocument1> cTermDocuments = new ArrayList<ResultDocument1>();
 			
 		CloseableHttpResponse responseATerm = null;
 		CloseableHttpResponse responseASummary = null;
@@ -86,23 +85,29 @@ class SearchService
 						if( entityASummary != null )
 						{
 							// EntityUtils.consumeQuietly(entityASummary);
-							// TODO: extract title and abstract here...
+							// TODO: also extract and store abstract here...
 							InputStream instreamASummary = entityASummary.getContent();
+							String aSummaryText = EntityUtils.toString( entityASummary );
 							try
 							{
-								def aSummaryXmlResult = xmlSlurper.parse( instreamASummary );
+								def aSummaryXmlResult = xmlSlurper.parseText( aSummaryText );
 								def articleTitle = aSummaryXmlResult.depthFirst().findAll { it.name() == 'ArticleTitle' }[0]
 								// println "aSummaryXmlResult: ${ articleTitle.text() }";
-								aTermTitles.add( articleTitle.text() );
+								doc.title = articleTitle.text()
+								aTermDocuments.add( doc );
 							}
+							catch( Exception e )
+							{
+								println "Failed parsing XML: \n ${aSummaryText}"
+							}
+
 							finally
 							{
 								instreamASummary.close();
 							}
 						}
-						
-						searchResult.aTermDocs.add( doc );
-						Thread.sleep( 750 );
+			
+						Thread.sleep( 1000 );
 					}
 				} 
 				finally 
@@ -110,9 +115,6 @@ class SearchService
 					instreamATerm.close();
 				}
 			}
-			
-			
-			
 			
 			// generate a list of items that contain the "C" term
 			HttpGet httpgetCTerm = new HttpGet(requestBaseUrl + "esearch.fcgi?db=pubmed&term=${cTerm}" );
@@ -152,12 +154,18 @@ class SearchService
 							// EntityUtils.consumeQuietly(entityASummary);
 							// TODO: extract title and abstract here...
 							InputStream instreamCSummary = entityCSummary.getContent();
+							String cSummaryText = EntityUtils.toString( entityCSummary );
 							try
 							{
-								def cSummaryXmlResult = xmlSlurper.parse( instreamCSummary );
+								def cSummaryXmlResult = xmlSlurper.parseText( cSummaryText );
 								def articleTitle = cSummaryXmlResult.depthFirst().findAll { it.name() == 'ArticleTitle' }[0];
 								// println "cSummaryXmlResult: ${ articleTitle }";
-								cTermTitles.add( articleTitle.text() );
+								doc.title = articleTitle.text();
+								cTermDocuments.add( doc );
+							}
+							catch( Exception e )
+							{
+								println "Failed parsing XML: \n ${cSummaryText}"
 							}
 							finally
 							{
@@ -165,8 +173,7 @@ class SearchService
 							}
 						}
 						
-						searchResult.cTermDocs.add( doc );
-						Thread.sleep( 750 );
+						Thread.sleep( 1000 );
 					}
 				}
 				finally
@@ -176,62 +183,102 @@ class SearchService
 			}
 				
 						
-			Map<String, Boolean> candidateBTerms = new HashMap<String,Boolean>();
+			// Map<String, Boolean> candidateBTerms = new HashMap<String,Boolean>();
+			Map<String, SwansonABCLink> candidateSwansonLinks = new HashMap<String, SwansonABCLink>();
+			
+			/* NOTE: rework this to where it iterates over a list of Objects where each Object
+			 * contains the title, uid, abstract, etc., instead of only iterating over the Titles
+			 * This way we can store a list of matching results right along with each bTerm
+			 * without having to do a lot of extra work. 
+			 */
 			
 			// generate a list of "B" terms common to both "A" and "C" documents
 			// Note: This would exclude the original terms, and stop-words, no?
-			for( String aTermTitle : aTermTitles )
+			for( ResultDocument1 aTermDocument : aTermDocuments )
 			{
 				// tokenize this...
 				
 				// for everything except stop words and the original aTerm, store the term in our
 				// candidate list
-				String[] tokens = aTermTitle.split( "\\s+" );
+				String[] tokens = aTermDocument.title.split( "\\s+" );
 				
 				for( String token : tokens )
 				{
 					if( !token.equals( aTerm ) && !stopWords.contains( token.toLowerCase() ) )
 					{
-						candidateBTerms.put( token, false );
+						// check if we already have this key (bTerm).  If not, add a new SwansonABCLink
+						// with this aTerm.  If we do already have this key (bTerm) then
+						// get our existing SwansonABCLink object and add this doc to the
+						// aTerms list
+						if( candidateSwansonLinks.containsKey( token.toLowerCase() ))
+						{
+							SwansonABCLink existingLink = candidateSwansonLinks.get( token.toLowerCase() );
+							existingLink.aTermDocs.add( aTermDocument );
+						}
+						else
+						{
+							SwansonABCLink newLink = new SwansonABCLink();
+							newLink.bTerm = token;
+							newLink.aTermDocs.add( aTermDocument );
+							candidateSwansonLinks.put( token.toLowerCase(), newLink );
+						}
 					}
 				}
 				
 			}
 
-			for( String cTermTitle : cTermTitles )
+			for( ResultDocument1 cTermDocument : cTermDocuments )
 			{
 				// tokenize this...
 				
 				// for everything except stop words and the original aTerm, store the term in our
 				// candidate list
-				String[] tokens = cTermTitle.split( "\\s+" );
+				String[] tokens = cTermDocument.title.split( "\\s+" );
 				
 				for( String token : tokens )
 				{
-					if( !token.equals( cTerm ) && !stopWords.contains( token ) )
+					if( !token.equals( cTerm ) && !stopWords.contains( token.toLowerCase() ) )
 					{
-						if( candidateBTerms.containsKey( token.toLowerCase() ))
+						
+						// check if we already have this key (bTerm).  If not, add a new SwansonABCLink
+						// with this cTerm.  If we do already have this key (bTerm) then
+						// get our existing SwansonABCLink object and add this doc to the
+						// cTerms list
+						
+						if( candidateSwansonLinks.containsKey( token.toLowerCase() ))
 						{
-							candidateBTerms.replace( token, true );
+							SwansonABCLink existingLink = candidateSwansonLinks.get( token.toLowerCase() );
+							existingLink.cTermDocs.add( cTermDocument );
 						}
 						else
 						{
-							candidateBTerms.put( token, false );
+							SwansonABCLink newLink = new SwansonABCLink();
+							newLink.bTerm = token;
+							newLink.cTermDocs.add( cTermDocument );
+							candidateSwansonLinks.put( token.toLowerCase(), newLink );
 						}
 					}
 				}
 			}
 			
 			
-			for( Map.Entry<String,Boolean> bCandidate : candidateBTerms )
+			
+			// TODO: iterate over the list of candidateSwansonLinks and find every 
+			// item where the aTermDocs list and the cTermDocs list both have at least
+			// one entry.  Those are our real bTerms. Return the list of those bTerms
+			// and the associated A/C doc lists...
+			List<SwansonABCLink> swansonLinks = new ArrayList<SwansonABCLink>();
+
+			for( Map.Entry<String, SwansonABCLink> entry : candidateSwansonLinks.entrySet() )
 			{
-				if( bCandidate.value == true )
+				SwansonABCLink link = entry.getValue();
+				if( link.aTermDocs.size() > 0 && link.cTermDocs.size() > 0 )
 				{
-					println( "bWord: " + bCandidate.key );
+					swansonLinks.add( link );
 				}
 			}
 			
-			return searchResult;
+			return swansonLinks;
 		} 
 		finally 
 		{

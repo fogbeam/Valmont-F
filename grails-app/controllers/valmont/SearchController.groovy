@@ -1,7 +1,5 @@
 package valmont
 
-import valmont.SearchResult1
-
 class SearchController 
 {
 
@@ -24,7 +22,6 @@ class SearchController
 		
 		List<SearchResult1> results = searchService.swansonLinkingProcedureOne( aTerm );
 		
-		// return results for rendering in view...
 		[results:results];
 	}
 	
@@ -33,14 +30,8 @@ class SearchController
 		String aTerm = params.termA;
 		String cTerm = params.termC;
 		
-		List<SearchResult1> results = new ArrayList<SearchResult1>();
+		List<SwansonABCLink> results = searchService.swansonLinkingProcedureTwo( aTerm, cTerm );
 		
-		SearchResult1 result = searchService.swansonLinkingProcedureTwo( aTerm, cTerm );
-		
-		results.add( result );
-		
-		// return results for rendering in view...
 		[results:results];
 	}
-	
 }
