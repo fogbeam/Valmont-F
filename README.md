@@ -50,6 +50,7 @@ Original code provided by Fogbeam Labs is licensed under the Apache License v2. 
 * support more complex relationships, especially "multi-hop" ones that involve more than two concepts
 * Add visualizations to help navigate / explore results. Maybe use dot / graphviz 
 * Add caching to reduce the need for downloading documents all the time
+* Add ability to filter the initial query(ies) by date range
 
 ## Resources and Stuff for Future Experimtation
 
