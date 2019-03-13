@@ -49,7 +49,7 @@ Original code provided by Fogbeam Labs is licensed under the Apache License v2. 
 
 ## TODO
 
-* Create a Docker image and push to Docker Hub
+* ~~ Create a Docker image and push to Docker Hub ~~  - DONE
 * add more terms to the clinical-stopwords list
 * add a "domain selector" to toggle what archive is queried and what stopword list(s) are employed
 * better tokenization of abstracts and titles, so we don't, for example, treat 'Start' and 'Start.' as different tokens and generate each as a 'b term'
