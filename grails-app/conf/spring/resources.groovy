@@ -5,14 +5,14 @@ beans = {
 	
 	generalStopwordsBean(valmont.StopwordList)
 	{
-		fileName = "stopwords.csv";
+		fileName = "/usr/local/tomcat/webapps/stopwords.csv";
 		fileFormat = "csv";
 	}
 
 	
 	clinicalStopwordsBean(valmont.StopwordList)
 	{
-		fileName = "clinical-stopwords.txt";
+		fileName = "/usr/local/tomcat/webapps/clinical-stopwords.txt";
 		fileFormat = "linesep";
 	}
 }

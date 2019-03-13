@@ -13,6 +13,14 @@ This is very much a Work In Progress at the moment, featuring fairly naive imple
 
 When I say I am called Valmont/F, the name will convey no impression to the reader, one way or another. My occupation is that of open source Literature Based Discovery system on GitHub. If you ask anyone who Valmont was, she will likely be able to tell you to see [http://www.gutenberg.org/files/19369/19369-h/19369-h.htm](http://www.gutenberg.org/files/19369/19369-h/19369-h.htm) If you ask here why I am named Valmont/F, she will surely say that I am named after the world-famous detective, Eugène Valmont.
 
+## Deployment
+
+There are two main ways to deploy Valmont/F at the moment. The first, and easiest, is to use our public Docker image(s), located at https://cloud.docker.com/u/fogbeam/repository/docker/fogbeam/valmont-f
+
+A simple "docker pull" followed by a "docker run" should yield a running Valmont/F instance. The container should be exposing port 8080, which you can map to whatever makes sense on your Docker host. The webapp is running on the root context.
+
+The second way is to clone this Git repo, install Java and Grails (if you don't already have those installed), and then do a "grails run-app" in the root of the cloned repo directory. Take this approach if you want to hack on the code yourself. The required Grails version is 3.3.6 if you plan to run things this way. Note that if you run locally this way, you'll need to edit grails-app/conf/spring/resources.groovy and change the paths for the two stopwords files to just the filename, which will work as a relative path. The path that's currently configured matches the way we build the Docker image.  
+
 
 ## Reference Material
 
