@@ -15,7 +15,7 @@ When I say I am called Valmont/F, the name will convey no impression to the read
 
 ## Deployment
 
-There are two main ways to deploy Valmont/F at the moment. The first, and easiest, is to use our public Docker image(s), located at https://cloud.docker.com/u/fogbeam/repository/docker/fogbeam/valmont-f
+There are two main ways to deploy Valmont/F at the moment. The first, and easiest, is to use our public Docker image(s), located at https://hub.docker.com/r/fogbeam/valmont-f
 
 A simple "docker pull" followed by a "docker run" should yield a running Valmont/F instance. The container should be exposing port 8080, which you can map to whatever makes sense on your Docker host. The webapp is running on the root context.
 
