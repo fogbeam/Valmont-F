@@ -29,9 +29,9 @@
 	
 							<div class="col-md-4" style="min-height: 100px;">
 							
-								"A" Term results:
+								"C" Term results:
 								<ul>
-									<g:each in="${result.aTermDocs}" var="doc">
+									<g:each in="${result.cTermDocs}" var="doc">
 										<li><a target="_blank"
 											href="http://www.ncbi.nlm.nih.gov/pubmed?term=${doc.uid}[uid]&cmd=DetailsSearch">${doc.uid} - ${doc.title}</a></li>
 									</g:each>
@@ -47,8 +47,8 @@
 					<p>Search again?</p>
 
 					<g:form controller="search" action="search1">
-						<label for="termA">"A" term</label>
-						<g:textField name="termA" />
+						<label for="termC">"C" term</label>
+						<g:textField name="termC" />
 						<g:submitButton name="submit" />
 					</g:form>
 				</div>

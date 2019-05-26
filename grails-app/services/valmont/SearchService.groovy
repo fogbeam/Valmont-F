@@ -12,7 +12,7 @@ class SearchService
 	def generalStopwordsBean;
 	def clinicalStopwordsBean;
 	
-	List<SwansonABCLink> swansonLinkingProcedureOne( final String aTerm )
+	List<SwansonABCLink> swansonLinkingProcedureOne( final String cTerm )
 	{
 		
 		List<String> stopWords = generalStopwordsBean.getStopwords();
@@ -31,28 +31,28 @@ class SearchService
 		xmlSlurper.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 			
 		
-		List<ResultDocument1> aTermDocuments = new ArrayList<ResultDocument1>();
-		CloseableHttpResponse responseATerm = null;
-		CloseableHttpResponse responseASummary = null;
+		List<ResultDocument1> cTermDocuments = new ArrayList<ResultDocument1>();
+		CloseableHttpResponse responseCTerm = null;
+		CloseableHttpResponse responseCSummary = null;
 		
 		try
 		{			
-			// generate a list of items that contain the "A" term
-			HttpGet httpgetATerm = new HttpGet(requestBaseUrl + "esearch.fcgi?db=pubmed&term=${aTerm}" );
-			responseATerm = httpclient.execute(httpgetATerm);
+			// generate a list of items that contain the "C" term
+			HttpGet httpgetCTerm = new HttpGet(requestBaseUrl + "esearch.fcgi?db=pubmed&term=${cTerm}" );
+			responseCTerm = httpclient.execute(httpgetCTerm);
 			
-			println "status: ${responseATerm.statusLine}";
+			println "status: ${responseCTerm.statusLine}";
 			
-			HttpEntity entityATerm = responseATerm.getEntity();
-			if (entityATerm != null)
+			HttpEntity entityCTerm = responseCTerm.getEntity();
+			if (entityCTerm != null)
 			{
-				InputStream instreamATerm = entityATerm.getContent();
+				InputStream instreamCTerm = entityCTerm.getContent();
 				try
 				{
 					
 					// String responseText = instreamATerm.getText();
 					// println "responseText: " + responseText;
-					def xmlResult = xmlSlurper.parse( instreamATerm );
+					def xmlResult = xmlSlurper.parse( instreamCTerm );
 					
 					// println "xmlResult: " + xmlResult;
 					
@@ -68,31 +68,31 @@ class SearchService
 						// collection that has fields for UID, Title, Abstract, etc.
 						
 						// http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=24600463&retmode=xml
-						HttpGet getASummary = new HttpGet(requestBaseUrl + "efetch.fcgi?db=pubmed&id=${doc.uid}&retmode=xml&email=prhodes@fogbeam.com&tool=arrowsmithg" );
-						responseASummary = httpclient.execute( getASummary );
-						HttpEntity entityASummary = responseASummary.getEntity();
-						if( entityASummary != null )
+						HttpGet getCSummary = new HttpGet(requestBaseUrl + "efetch.fcgi?db=pubmed&id=${doc.uid}&retmode=xml&email=prhodes@fogbeam.com&tool=arrowsmithg" );
+						responseCSummary = httpclient.execute( getCSummary );
+						HttpEntity entityCSummary = responseCSummary.getEntity();
+						if( entityCSummary != null )
 						{
 							// EntityUtils.consumeQuietly(entityASummary);
 							// TODO: also extract and store abstract here...
-							InputStream instreamASummary = entityASummary.getContent();
-							String aSummaryText = EntityUtils.toString( entityASummary );
+							InputStream instreamCSummary = entityCSummary.getContent();
+							String cSummaryText = EntityUtils.toString( entityCSummary );
 							try
 							{
-								def aSummaryXmlResult = xmlSlurper.parseText( aSummaryText );
-								def articleTitle = aSummaryXmlResult.depthFirst().findAll { it.name() == 'ArticleTitle' }[0]
+								def cSummaryXmlResult = xmlSlurper.parseText( cSummaryText );
+								def articleTitle = cSummaryXmlResult.depthFirst().findAll { it.name() == 'ArticleTitle' }[0]
 								// println "aSummaryXmlResult: ${ articleTitle.text() }";
 								doc.title = articleTitle.text()
-								aTermDocuments.add( doc );
+								cTermDocuments.add( doc );
 							}
 							catch( Exception e )
 							{
-								println "Failed parsing XML: \n ${aSummaryText}"
+								println "Failed parsing XML: \n ${cSummaryText}"
 							}
 
 							finally
 							{
-								instreamASummary.close();
+								instreamCSummary.close();
 							}
 						}
 			
@@ -101,13 +101,13 @@ class SearchService
 				}
 				finally
 				{
-					instreamATerm.close();
+					instreamCTerm.close();
 				}
 			}
 
 			
-			// TODO: now we have our list of 'A' terms, so iterate over them, and generate the
-			// 'b' terms list
+			// TODO: now we have our list of 'C' terms, so iterate over them, and generate the
+			// candidate 'B' terms list
 			Map<String, SwansonABCLink> candidateSwansonLinks = new HashMap<String, SwansonABCLink>();
 			
 			/* NOTE: rework this to where it iterates over a list of Objects where each Object
@@ -116,34 +116,34 @@ class SearchService
 			 * without having to do a lot of extra work.
 			 */
 			
-			// generate a list of "B" terms common to both "A" and "C" documents
-			// Note: This would exclude the original terms, and stop-words, no?
-			for( ResultDocument1 aTermDocument : aTermDocuments )
+			// generate a list of "B" terms associated with the "C" documents
+			// Note: This would exclude the original term, and stop-words, no?
+			for( ResultDocument1 cTermDocument : cTermDocuments )
 			{
 				// tokenize this...
 				
 				// for everything except stop words and the original aTerm, store the term in our
 				// candidate list
-				String[] tokens = aTermDocument.title.split( "\\s+" );
+				String[] tokens = cTermDocument.title.split( "\\s+" );
 				
 				for( String token : tokens )
 				{
-					if( !token.equals( aTerm ) && !stopWords.contains( token.toLowerCase() ) )
+					if( !token.equals( cTerm ) && !stopWords.contains( token.toLowerCase() ) )
 					{
 						// check if we already have this key (bTerm).  If not, add a new SwansonABCLink
-						// with this aTerm.  If we do already have this key (bTerm) then
+						// with this cTerm.  If we do already have this key (bTerm) then
 						// get our existing SwansonABCLink object and add this doc to the
-						// aTerms list
+						// cTerms list
 						if( candidateSwansonLinks.containsKey( token.toLowerCase() ))
 						{
 							SwansonABCLink existingLink = candidateSwansonLinks.get( token.toLowerCase() );
-							existingLink.aTermDocs.add( aTermDocument );
+							existingLink.cTermDocs.add( cTermDocument );
 						}
 						else
 						{
 							SwansonABCLink newLink = new SwansonABCLink();
 							newLink.bTerm = token;
-							newLink.aTermDocs.add( aTermDocument );
+							newLink.cTermDocs.add( cTermDocument );
 							candidateSwansonLinks.put( token.toLowerCase(), newLink );
 						}
 					}
@@ -156,20 +156,20 @@ class SearchService
 		}
 		finally
 		{
-			if( responseATerm != null )
+			if( responseCTerm != null )
 			{
-				responseATerm.close();
+				responseCTerm.close();
 			}
 			
-			if( responseASummary != null )
+			if( responseCSummary != null )
 			{
-				responseASummary.close();
+				responseCSummary.close();
 			}
 		}
-		
 	}
 	
-	public List<SwansonABCLink> swansonLinkingProcedureTwo( final String aTerm, final String cTerm ) 
+	
+	public List<SwansonABCLink> swansonLinkingProcedureTwo( final String cTerm, final String aTerm ) 
 	{	
 		List<String> stopWords = generalStopwordsBean.getStopwords();
 		List<String> clinicalStopWords = clinicalStopwordsBean.getStopwords();
@@ -196,19 +196,86 @@ class SearchService
 		CloseableHttpResponse responseCSummary = null;
 		try
 		{
-			// generate a list of items that contain the "A" term
-			HttpGet httpgetATerm = new HttpGet(requestBaseUrl + "esearch.fcgi?db=pubmed&term=${aTerm}" );
-			responseATerm = httpclient.execute(httpgetATerm);		
+			// generate a list of items that contain the "C" term
+			HttpGet httpgetCTerm = new HttpGet(requestBaseUrl + "esearch.fcgi?db=pubmed&term=${cTerm}" );
+			responseCTerm = httpclient.execute(httpgetCTerm);		
 			
-			println "status: ${responseATerm.statusLine}";
+			println "status: ${responseCTerm.statusLine}";
 			
-			HttpEntity entityATerm = responseATerm.getEntity();
-			if (entityATerm != null) 
+			HttpEntity entityCTerm = responseCTerm.getEntity();
+			if (entityCTerm != null) 
 			{
-				InputStream instreamATerm = entityATerm.getContent();
+				InputStream instreamCTerm = entityCTerm.getContent();
 				try 
 				{					
+					// String responseText = instreamCTerm.getText();
+					// println "responseText: " + responseText;
+					def xmlResult = xmlSlurper.parse( instreamCTerm );
 					
+					// println "xmlResult: " + xmlResult;
+					
+					// add the cTerm results to the SearchResult object
+					def idList = xmlResult.IdList.Id;
+					
+					idList.each {
+						println "adding: " + it;
+						ResultDocument1 doc = new ResultDocument1();
+						doc.uid = it;
+						
+						// use this UID to locate the title and abstract and save an object into our
+						// collection that has fields for UID, Title, Abstract, etc.
+						
+						// http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=24600463&retmode=xml
+						HttpGet getCSummary = new HttpGet(requestBaseUrl + "efetch.fcgi?db=pubmed&id=${doc.uid}&retmode=xml&email=prhodes@fogbeam.com&tool=arrowsmithg" );
+						responseCSummary = httpclient.execute( getCSummary );
+						HttpEntity entityCSummary = responseCSummary.getEntity();
+						if( entityCSummary != null )
+						{
+							// EntityUtils.consumeQuietly(entityCSummary);
+							// TODO: also extract and store abstract here...
+							InputStream instreamCSummary = entityCSummary.getContent();
+							String cSummaryText = EntityUtils.toString( entityCSummary );
+							try
+							{
+								def cSummaryXmlResult = xmlSlurper.parseText( cSummaryText );
+								def articleTitle = cSummaryXmlResult.depthFirst().findAll { it.name() == 'ArticleTitle' }[0]
+								// println "cSummaryXmlResult: ${ articleTitle.text() }";
+								doc.title = articleTitle.text()
+								cTermDocuments.add( doc );
+							}
+							catch( Exception e )
+							{
+								println "Failed parsing XML: \n ${cSummaryText}"
+							}
+
+							finally
+							{
+								instreamCSummary.close();
+							}
+						}
+			
+						Thread.sleep( 1000 );
+					}
+				} 
+				finally 
+				{
+					instreamCTerm.close();
+				}
+			}
+			
+			
+			
+			// now generate a list of items that contain the "A" term
+			HttpGet httpgetATerm = new HttpGet(requestBaseUrl + "esearch.fcgi?db=pubmed&term=${aTerm}" );
+			responseATerm = httpclient.execute(httpgetATerm);
+						
+			
+			HttpEntity entityATerm = responseATerm.getEntity();
+			if (entityATerm != null)
+			{
+				InputStream instreamATerm = entityATerm.getContent();
+				try
+				{
 					// String responseText = instreamATerm.getText();
 					// println "responseText: " + responseText;
 					def xmlResult = xmlSlurper.parse( instreamATerm );
@@ -233,91 +300,24 @@ class SearchService
 						if( entityASummary != null )
 						{
 							// EntityUtils.consumeQuietly(entityASummary);
-							// TODO: also extract and store abstract here...
+							// TODO: extract title and abstract here...
 							InputStream instreamASummary = entityASummary.getContent();
 							String aSummaryText = EntityUtils.toString( entityASummary );
 							try
 							{
 								def aSummaryXmlResult = xmlSlurper.parseText( aSummaryText );
-								def articleTitle = aSummaryXmlResult.depthFirst().findAll { it.name() == 'ArticleTitle' }[0]
-								// println "aSummaryXmlResult: ${ articleTitle.text() }";
-								doc.title = articleTitle.text()
+								def articleTitle = aSummaryXmlResult.depthFirst().findAll { it.name() == 'ArticleTitle' }[0];
+								// println "aSummaryXmlResult: ${ articleTitle }";
+								doc.title = articleTitle.text();
 								aTermDocuments.add( doc );
 							}
 							catch( Exception e )
 							{
 								println "Failed parsing XML: \n ${aSummaryText}"
 							}
-
 							finally
 							{
 								instreamASummary.close();
-							}
-						}
-			
-						Thread.sleep( 1000 );
-					}
-				} 
-				finally 
-				{
-					instreamATerm.close();
-				}
-			}
-			
-			// generate a list of items that contain the "C" term
-			HttpGet httpgetCTerm = new HttpGet(requestBaseUrl + "esearch.fcgi?db=pubmed&term=${cTerm}" );
-			responseCTerm = httpclient.execute(httpgetCTerm);
-						
-			
-			HttpEntity entityCTerm = responseCTerm.getEntity();
-			if (entityCTerm != null)
-			{
-				InputStream instreamCTerm = entityCTerm.getContent();
-				try
-				{
-					
-					// String responseText = instreamCTerm.getText();
-					// println "responseText: " + responseText;
-					def xmlResult = xmlSlurper.parse( instreamCTerm );
-					
-					// println "xmlResult: " + xmlResult;
-					
-					// add the aTerm results to the SearchResult object
-					def idList = xmlResult.IdList.Id;
-					
-					idList.each {
-						println "adding: " + it;
-						ResultDocument1 doc = new ResultDocument1();
-						doc.uid = it;
-						
-						// use this UID to locate the title and abstract and save an object into our
-						// collection that has fields for UID, Title, Abstract, etc.
-						
-						// http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=24600463&retmode=xml
-						HttpGet getCSummary = new HttpGet(requestBaseUrl + "efetch.fcgi?db=pubmed&id=${doc.uid}&retmode=xml&email=prhodes@fogbeam.com&tool=arrowsmithg" );
-						responseCSummary = httpclient.execute( getCSummary );
-						HttpEntity entityCSummary = responseCSummary.getEntity();
-						if( entityCSummary != null )
-						{
-							// EntityUtils.consumeQuietly(entityASummary);
-							// TODO: extract title and abstract here...
-							InputStream instreamCSummary = entityCSummary.getContent();
-							String cSummaryText = EntityUtils.toString( entityCSummary );
-							try
-							{
-								def cSummaryXmlResult = xmlSlurper.parseText( cSummaryText );
-								def articleTitle = cSummaryXmlResult.depthFirst().findAll { it.name() == 'ArticleTitle' }[0];
-								// println "cSummaryXmlResult: ${ articleTitle }";
-								doc.title = articleTitle.text();
-								cTermDocuments.add( doc );
-							}
-							catch( Exception e )
-							{
-								println "Failed parsing XML: \n ${cSummaryText}"
-							}
-							finally
-							{
-								instreamCSummary.close();
 							}
 						}
 						
@@ -326,7 +326,7 @@ class SearchService
 				}
 				finally
 				{
-					instreamCTerm.close();
+					instreamATerm.close();
 				}
 			}
 				
@@ -339,46 +339,15 @@ class SearchService
 			 * without having to do a lot of extra work. 
 			 */
 			
-			// generate a list of "B" terms common to both "A" and "C" documents
+			// TODO: filter the "B" terms per the techniques covered in Swanson's original paper
+			
+			// generate a list of "B" terms common to both "C" and "A" documents
 			// Note: This would exclude the original terms, and stop-words, no?
-			for( ResultDocument1 aTermDocument : aTermDocuments )
-			{
-				// tokenize this...
-				
-				// for everything except stop words and the original aTerm, store the term in our
-				// candidate list
-				String[] tokens = aTermDocument.title.split( "\\s+" );
-				
-				for( String token : tokens )
-				{
-					if( !token.equals( aTerm ) && !stopWords.contains( token.toLowerCase() ) )
-					{
-						// check if we already have this key (bTerm).  If not, add a new SwansonABCLink
-						// with this aTerm.  If we do already have this key (bTerm) then
-						// get our existing SwansonABCLink object and add this doc to the
-						// aTerms list
-						if( candidateSwansonLinks.containsKey( token.toLowerCase() ))
-						{
-							SwansonABCLink existingLink = candidateSwansonLinks.get( token.toLowerCase() );
-							existingLink.aTermDocs.add( aTermDocument );
-						}
-						else
-						{
-							SwansonABCLink newLink = new SwansonABCLink();
-							newLink.bTerm = token;
-							newLink.aTermDocs.add( aTermDocument );
-							candidateSwansonLinks.put( token.toLowerCase(), newLink );
-						}
-					}
-				}
-				
-			}
-
 			for( ResultDocument1 cTermDocument : cTermDocuments )
 			{
 				// tokenize this...
 				
-				// for everything except stop words and the original aTerm, store the term in our
+				// for everything except stop words and the original cTerm, store the term in our
 				// candidate list
 				String[] tokens = cTermDocument.title.split( "\\s+" );
 				
@@ -386,12 +355,10 @@ class SearchService
 				{
 					if( !token.equals( cTerm ) && !stopWords.contains( token.toLowerCase() ) )
 					{
-						
 						// check if we already have this key (bTerm).  If not, add a new SwansonABCLink
-						// with this cTerm.  If we do already have this key (bTerm) then
+						// with this aTerm.  If we do already have this key (bTerm) then
 						// get our existing SwansonABCLink object and add this doc to the
 						// cTerms list
-						
 						if( candidateSwansonLinks.containsKey( token.toLowerCase() ))
 						{
 							SwansonABCLink existingLink = candidateSwansonLinks.get( token.toLowerCase() );
@@ -406,11 +373,47 @@ class SearchService
 						}
 					}
 				}
+				
+			}
+
+			// now link in the "A" term documents
+			for( ResultDocument1 aTermDocument : aTermDocuments )
+			{
+				// tokenize this...
+				
+				// for everything except stop words and the original aTerm, store the term in our
+				// candidate list
+				String[] tokens = aTermDocument.title.split( "\\s+" );
+				
+				for( String token : tokens )
+				{
+					if( !token.equals( aTerm ) && !stopWords.contains( token.toLowerCase() ) )
+					{
+						
+						// check if we already have this key (bTerm).  If not, add a new SwansonABCLink
+						// with this aTerm.  If we do already have this key (bTerm) then
+						// get our existing SwansonABCLink object and add this doc to the
+						// aTerms list
+						
+						if( candidateSwansonLinks.containsKey( token.toLowerCase() ))
+						{
+							SwansonABCLink existingLink = candidateSwansonLinks.get( token.toLowerCase() );
+							existingLink.aTermDocs.add( aTermDocument );
+						}
+						else
+						{							
+							SwansonABCLink newLink = new SwansonABCLink();
+							newLink.bTerm = token;
+							newLink.aTermDocs.add( aTermDocument );
+							candidateSwansonLinks.put( token.toLowerCase(), newLink );
+						}
+					}
+				}
 			}
 			
 			
 			
-			// TODO: iterate over the list of candidateSwansonLinks and find every 
+			// Iterate over the list of candidateSwansonLinks and find every 
 			// item where the aTermDocs list and the cTermDocs list both have at least
 			// one entry.  Those are our real bTerms. Return the list of those bTerms
 			// and the associated A/C doc lists...

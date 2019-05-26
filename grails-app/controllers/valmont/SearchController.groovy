@@ -18,9 +18,9 @@ class SearchController
 	
     def doArrowSmithProcedureOne()
 	{
-		String aTerm = params.termA;
+		String cTerm = params.termC;
 		
-		List<SwansonABCLink> results = searchService.swansonLinkingProcedureOne( aTerm );
+		List<SwansonABCLink> results = searchService.swansonLinkingProcedureOne( cTerm );
 		
 		[results:results];
 	}

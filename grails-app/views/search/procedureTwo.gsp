@@ -18,10 +18,10 @@
 				<h1>Procedure Two</h1>
 				<div id="entry-form-div" style="margin-top: 30px;">
 					<g:form controller="search" action="doArrowSmithProcedureTwo">
-						<label for="termA">"A" term</label>
-						<g:textField name="termA" />
-						<label for="termC">"C" term</label>
+						<label for="termA">"C" term</label>
 						<g:textField name="termC" />
+						<label for="termC">"A" term</label>
+						<g:textField name="termA" />
 						<g:submitButton name="submit" />
 					</g:form>
 				</div>
