@@ -126,3 +126,19 @@ environments:
                 testOnReturn: false
                 jdbcInterceptors: ConnectionState
                 defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+
+stopwords:
+       path:
+         clinical: ${CLINICAL_STOPWORDS_PATH:./clinical-stopwords.txt}
+         general: ${GENERAL_STOPWORDS_PATH:./stopwords.csv}
+         
+---
+spring:
+  profiles: container
+
+stopwords:
+       path:
+         clinical: ${CLINICAL_STOPWORDS_PATH:/usr/local/tomcat/webapps/clinical-stopwords.txt}
+         general: ${GENERAL_STOPWORDS_PATH:/usr/local/tomcat/webapps/stopwords.csv}
+                
+                

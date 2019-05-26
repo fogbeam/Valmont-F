@@ -1,3 +1,3 @@
 #!/bin/bash
 
-grails clean ; grails run-app
+grails clean ; grails run-app $@
