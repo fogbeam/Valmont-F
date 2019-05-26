@@ -17,7 +17,7 @@ When I say I am called Valmont/F, the name will convey no impression to the read
 
 There are two main ways to deploy Valmont/F at the moment. The first, and easiest, is to use our public Docker image(s), located at https://hub.docker.com/r/fogbeam/valmont-f
 
-A simple "docker pull fogbeam/valmont-f:latest" followed by a "docker run -d -p8080:8080 fogbeam/valmont-f:latest" should yield a running Valmont/F instance. The container exposes port 8080, but you can change the -p argument to map that to whatever makes sense on your Docker host. The webapp is running on the root context.
+A simple "docker pull fogbeam/valmont-f:latest" followed by a "docker run -d -p 8080:8080 fogbeam/valmont-f:latest" should yield a running Valmont/F instance. The container exposes port 8080, but you can change the -p argument to map that to whatever makes sense on your Docker host. The webapp is running on the root context.
 
 The second way is to clone this Git repo, install Java and Grails (if you don't already have those installed), and then do a ./run_valmont.sh in the root of the cloned repo directory. Take this approach if you want to hack on the code yourself. The required Grails version is 3.3.6 if you plan to run things this way.  
 
